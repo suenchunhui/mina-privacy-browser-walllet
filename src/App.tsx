@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-//import 'bootstrap/dist/css/bootstrap.min.css';
-//import 'bootstrap/dist/js/bootstrap.bundle.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.js';
 import WelcomePage from "./WelcomePage"; 
 import PrivateKeyPage from "./PrivateKeyPage";
 import WalletPage from "./WalletPage";
