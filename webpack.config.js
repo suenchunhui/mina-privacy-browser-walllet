@@ -22,10 +22,11 @@ module.exports = {
             },
             {
                 exclude: /node_modules/,
-                test: /\.css$/i,
+                test: /\.(sa|sc|c)ss$/,
                 use: [
                     "style-loader",
-                    "css-loader"
+                    "css-loader",
+                    "sass-loader"
                 ]
 
             },
@@ -35,10 +36,14 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 { from: "manifest.json", to: "../manifest.json" },
+                { from: "img/*.png", to: "../" },
             ],
         }),
         ...getHtmlPlugins(["index"]),
     ],
+    experiments: {
+        topLevelAwait: true
+    },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
     },
@@ -53,7 +58,7 @@ function getHtmlPlugins(chunks) {
         (chunk) =>
             new HTMLPlugin({
                 title: "React extension",
-                filename: `${chunk}.html`,
+                filename: `../${chunk}.html`,
                 chunks: [chunk],
             })
     );

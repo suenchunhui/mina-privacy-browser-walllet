@@ -1,9 +1,24 @@
 {
     "version": "1.0.0",
-    "manifest_version": 3,
-    "name": "React Chrome Extension",
-    "action": {
-        "default_popup": "js/index.html",
-        "default_title": "React Chrome Extension"
-    }
+    "manifest_version": 2,
+    "name": "Shielded Coin Wallet", 
+    "icons": {
+        "48": "img/icon-48.png",
+        "96": "img/icon-96.png",
+        "128": "img/icon-128.png"
+    }, 
+    "browser_action":{
+        "default_icon":{
+          "48":"img/icon-48.png"
+        },
+        "default_title": "Shielded Wallet",
+        "default_popup": "index.html"
+    },
+    "background":{
+        "scripts":["js/background.js"]
+    },
+    "permissions": [
+        "storage"  
+    ], 
+    "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' blob: filesystem: ; object-src 'self';"
 }
