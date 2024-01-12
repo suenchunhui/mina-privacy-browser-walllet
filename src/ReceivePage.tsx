@@ -1,5 +1,6 @@
 interface ReceivePageProps {
-    switchPage:  React.Dispatch<React.SetStateAction<string>>
+    switchPage:  React.Dispatch<React.SetStateAction<string>>,
+    mode: string
 }
 
 function ReceivePage({switchPage}: ReceivePageProps) {

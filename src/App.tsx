@@ -10,6 +10,7 @@ import ReceivePage from "./ReceivePage";
 function App() {
   const [activePage, setActivePage] = useState('');
   const [isImporting, setImporting] = useState(false);
+  const [mode, setMode] = useState('public');
   useEffect(() => {
     chrome.runtime.sendMessage(['get-data', 'public-key'], (response) => {
       if(response) 
@@ -24,9 +25,9 @@ function App() {
 
       {(activePage == 'welcome') && <WelcomePage switchPage={setActivePage} setImporting={setImporting} />}
       {(activePage == 'privatekey') && <PrivateKeyPage switchPage={setActivePage} isImporting={isImporting} />}
-      {(activePage == 'wallet') && <WalletPage switchPage={setActivePage} />}
-      {(activePage == 'send') && <SendPage switchPage={setActivePage} />}
-      {(activePage == 'receive') && <ReceivePage switchPage={setActivePage} />}
+      {(activePage == 'wallet') && <WalletPage switchPage={setActivePage} switchMode={setMode} />}
+      {(activePage == 'send') && <SendPage switchPage={setActivePage} mode={mode} />}
+      {(activePage == 'receive') && <ReceivePage switchPage={setActivePage} mode={mode} />}
     </div>
   );
 }

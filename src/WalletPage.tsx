@@ -1,29 +1,61 @@
+import React, { useState, useEffect } from 'react';
+import Nav from 'react-bootstrap/Nav'; 
+
 interface WalletPageProps {
-    switchPage:  React.Dispatch<React.SetStateAction<string>>
+    switchPage:  React.Dispatch<React.SetStateAction<string>>,
+    switchMode: React.Dispatch<React.SetStateAction<string>>
 }
 
-function WalletPage({switchPage}: WalletPageProps) {
+function WalletPage({switchPage, switchMode}: WalletPageProps) {
+    const [publicKey, setPublicKey] = useState('');
+    const [mode, setMode] = useState('public');
+    const [totalBalance, setTotalBalance] = useState(100);
+    const [publicBalance, setPublicBalance] = useState(10);
+    const [privateBalance, setPrivateBalance] = useState(20);
+    const [currBalance, setCurrBalance] = useState(10);
+
+    useEffect(() => {
+        chrome.runtime.sendMessage(['get-data', 'public-key'], (response) => {
+            setPublicKey(response);
+        });  
+      }, []);
+    
+    function navSelect(selectedKey: string) {
+        switch(selectedKey){
+            case 'public':
+                setMode('public');
+                switchMode('public');
+                setCurrBalance(publicBalance);
+                break;
+            case 'private':
+                setMode('private');
+                switchMode('private');
+                setCurrBalance(privateBalance);
+                break;
+        }            
+    }
+    
     return (
     <div id="wallet_page">
         <div className="row justify-content-center">
             <h2 className="col-md-auto">Privacy Wallet</h2>
         </div>
         <div className="row justify-content-center">
-            <div id="address_text" className="col-md-auto">ADDRESS</div>
-            <div id="total_balance_text" className="col-sm-auto">TOTAL BALANCE</div>
+            <div id="address_text" className="col-md-auto">{publicKey}</div>
+            <div id="total_balance_text" className="col-sm-auto">Total bal: {totalBalance}</div>
         </div>
         <div className="row justify-content-center">
-            <ul className="nav nav-tabs col-md-auto">
-                <li className="nav-item">
-                    <a className="nav-link active" href="#" id="public_nav">Public</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" href="#" id="private_nav">Private</a>
-                </li>
-            </ul>    
+            <Nav className="col-md-auto" activeKey={mode} onSelect={(k)=>{if(k) navSelect(k)}}>
+                <Nav.Item>
+                    <Nav.Link eventKey="public" id="public_nav">Public</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="private" id="private_nav">Private</Nav.Link>
+                </Nav.Item>
+            </Nav>
         </div>
         <div className="row justify-content-center">
-            <h3 id="balance_text" className="col-md-auto">BAL</h3>
+            <h3 id="balance_text" className="col-md-auto">{mode} bal: {currBalance}</h3>
         </div>
         <br/>
         <div className="row justify-content-center">

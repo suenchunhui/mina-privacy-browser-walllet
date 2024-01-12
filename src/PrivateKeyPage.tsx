@@ -7,38 +7,40 @@ interface PrivateKeyPageProps {
 }
 
 function PrivateKeyPage({switchPage, isImporting}: PrivateKeyPageProps) {
-    const [publicKey, setPublicKey] = useState('');
     const [privateKey, setPrivateKey] = useState('');
+    let editable = true;
     useEffect(() => {
         if(!isImporting){
             const priv = PrivateKey.random();
-            const pk = priv.toPublicKey();
-            setPublicKey(pk.toBase58());
             setPrivateKey(priv.toBase58());
-
-            // chrome.runtime.sendMessage(['gen-key', ''], (response) => {
-            //     if(response){
-            //         setPublicKey(response[0]);
-            //         setPrivateKey(response[1]);
-            //     }
-            //   });  
+            editable = false;
         }
     }, []);
 
     function saveAll(){
-        chrome.runtime.sendMessage(['set-data', 'public-key', publicKey], (response) => {});
-        chrome.runtime.sendMessage(['set-data', 'private-key', privateKey], (response) => {});
+        const priv = PrivateKey.fromBase58(privateKey);
+        const pk = priv.toPublicKey();
+        if(priv && pk){
+            chrome.runtime.sendMessage(['set-data', 'public-key', pk.toBase58()], (response) => {});
+            chrome.runtime.sendMessage(['set-data', 'private-key', privateKey], (response) => {
+                switchPage('wallet')
+            });
+        }else{
+            alert("invalid private key");
+        }
     }
 
     return (
     <div id="private_key_page">
         <div className="row justify-content-center">
-            <span className="input-group-text col-md" id="private_key_text">{privateKey}</span>
+            Private key in base58:
+            <input className="input-group-text col-md" id="private_key_text" value={privateKey} onChange={(e)=>{setPrivateKey(e.target.value)}} contentEditable={editable}/>
         </div>
         <br/>
         <div className="row justify-content-center">
-            <button type="button" className="btn btn-primary col-sm-auto" id="init_key_btn" onClick={()=>{saveAll(); switchPage('wallet')}}
+            <button type="button" className="btn btn-primary col-sm-auto" id="init_key_btn" onClick={()=>{saveAll();}}
             >Create new wallet</button>
+            <br/>
         </div>
     </div>)
 }
