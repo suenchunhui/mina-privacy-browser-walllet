@@ -26,7 +26,7 @@ const NetworkURL = "https://proxy.berkeley.minaexplorer.com/graphql";
 const MinaNetwork = Mina.Network(NetworkURL);
 Mina.setActiveInstance(MinaNetwork);
 console.log('Using network: ' + NetworkURL);
-const feepayerKey = PrivateKey.fromBase58("EKDv746W5g8pyBpKqox9MGkEYSPDdS5QdeQx3gjKDKVyH2oce6tH");
+const feepayerKey = PrivateKey.fromBase58("");
 const feepayerAccount = feepayerKey.toPublicKey();
 
 //coin instance
@@ -36,10 +36,6 @@ const coinInstance = new Coin(zkAppAddress);
 //merkle listener
 const api_port = 30001;
 const listener = new MerkleListenerLib('localhost', api_port);
-
-//> recipient 
-//priv 'EKFdkC4AEzJsRz9An5TyXrcjxzcKUdsoFyUBmmSDVxaocxsuJT6C'
-//pub  'B62qqEDYzgBcPpNJMozCv2fJwLrVpPTE4QJMXK3qe4dKWb5Z5K38XF7'
 
 async function sendPublicPublic(recipient_b58: string, amount: bigint){
 
