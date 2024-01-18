@@ -10,13 +10,19 @@ function SendPage({switchPage, mode}: SendPageProps) {
     const [recipientMode, setRecipientMode] = useState('public');
     const [recipient, setRecipient] = useState('');
     const [amount, setAmount] = useState(0.0);
+    const [mesg, setMesg] = useState('');
 
     function transfer(){
         if(mode == 'public'){
             if(recipientMode == 'public'){
                 //public->public
-
-
+                setMesg("sending...")
+                chrome.runtime.sendMessage(['sendPublicPublic', [recipient, amount]], (response) => {
+                    if(response){
+                        setMesg(`TX hash: <a href='${response}'>$`);
+                        //switchPage('wallet')
+                    }
+                });
             }else{
                 //recipientMode==private
                 //public->private
@@ -54,8 +60,9 @@ function SendPage({switchPage, mode}: SendPageProps) {
                     checked={recipientMode === 'private'} onChange={e => {setRecipientMode('private')}} />
                     <Form.Check.Label className="form-check-label" htmlFor="send_to_private_radio">Send to private</Form.Check.Label>
                 </Form.Check>
+            <div id="msg">{mesg}</div>
             <div className="row justify-content-center">
-                <button type="button" className="btn btn-primary col-auto" id="send_confirm_btn" onClick={()=>{switchPage('wallet')}}>Send</button>
+                <button type="button" className="btn btn-primary col-auto" id="send_confirm_btn" onClick={()=>{transfer()}}>Send</button>
                 <div className="col-auto"></div>
                 <button type="button" className="btn btn-danger col-auto" id="cancel_to_wallet1_btn" onClick={()=>{switchPage('wallet')}}>Cancel</button>
             </div>
